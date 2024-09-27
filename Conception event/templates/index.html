@@ -1,22 +1,21 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Fecha de Concepción</title>
-    <link rel="stylesheet" href="/Conception event/static/styles.css">
+    <title>Conception Event Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Fecha de Concepción</h1>
-        <form id="birthdate-form">
-            <label for="birthdate">Ingresa tu fecha de nacimiento:</label>
+        <h1>Conception Event Finder</h1>
+        <form id="eventForm">
+            <label for="birthdate">Fecha de Nacimiento:</label>
             <input type="date" id="birthdate" name="birthdate" required>
             <button type="submit">Calcular</button>
         </form>
-        <div id="result"></div>
+        <div id="results"></div>
     </div>
-    <script src="/Conception event/static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

@@ -1,42 +1,32 @@
-// static/script.js
-document.getElementById('birthdate-form').addEventListener('submit', function(event) {
+document.getElementById('eventForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const birthdate = new Date(document.getElementById('birthdate').value);
-    const conceptionDate = new Date(birthdate);
-    conceptionDate.setDate(conceptionDate.getDate() - 266); // Aproximadamente 38 semanas
 
-    const startDate = new Date(conceptionDate);
-    startDate.setDate(startDate.getDate() - 4);
-    const endDate = new Date(conceptionDate);
-    endDate.setDate(endDate.getDate() + 4);
+    const birthdate = document.getElementById('birthdate').value;
 
     fetch('/get-events', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            start_date: startDate.toISOString().split('T')[0],
-            end_date: endDate.toISOString().split('T')[0]
-        })
+        body: JSON.stringify({ start_date: birthdate, end_date: birthdate })
     })
     .then(response => response.json())
-    .then(data => displayEvents(data, conceptionDate))
+    .then(data => {
+        const results = document.getElementById('results');
+        results.innerHTML = '';
+
+        if (data.length === 0) {
+            results.innerHTML = 'No events found.';
+        } else {
+            data.forEach(event => {
+                const div = document.createElement('div');
+                div.textContent = `${event.date}: ${event.event}`;
+                results.appendChild(div);
+            });
+        }
+    })
     .catch(error => {
         console.error('Error fetching events:', error);
+        document.getElementById('results').innerHTML = 'Error fetching events.';
     });
 });
-
-function displayEvents(eventsArray, conceptionDate) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `<h2>Fecha de Concepción Estimada: ${conceptionDate.toDateString()}</h2>`;
-    const eventsList = document.createElement('ul');
-
-    eventsArray.forEach(event => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${event.year} - ${event.text}`;
-        eventsList.appendChild(listItem);
-    });
-
-    resultDiv.appendChild(eventsList);
-}
